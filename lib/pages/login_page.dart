@@ -2,16 +2,32 @@ import 'package:flutter/material.dart';
 import 'package:mobile/components/my_button.dart';
 import 'package:mobile/components/my_textfield.dart';
 import 'package:mobile/components/square_tile.dart';
+import '../api/network.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
+import 'home.dart';
 
-class LoginPage extends StatelessWidget {
-  LoginPage({super.key});
+class LoginPage extends StatefulWidget {
+  @override
+  _LoginState createState() => _LoginState();
+}
+
+class _LoginState extends State<LoginPage> {
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+  bool _secureText = true;
+  bool _isLoading = false;
+  final _formKey = GlobalKey<FormState>();
+
+  _showMsg(msg) {
+    final snackBar = SnackBar(
+      content: Text(msg),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
 
   // text editing controllers
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
-
-  // hit login api
-  void signUserIn() {}
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +95,9 @@ class LoginPage extends StatelessWidget {
 
               // sign in button
               MyButton(
-                onTap: signUserIn,
+                onTap: () async {
+                  _login();
+                },
               ),
 
               const SizedBox(height: 50),
@@ -153,5 +171,35 @@ class LoginPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void _login() async {
+    setState(() {
+      _isLoading = true;
+    });
+    var data = {
+      'email': usernameController.text,
+      'password': passwordController.text
+    };
+    print(data);
+
+    var res = await Network().auth(data, 'logins');
+    var body = json.decode(res.body);
+    print(body);
+    if (body['OUT_STAT'] == "T") {
+      SharedPreferences localStorage = await SharedPreferences.getInstance();
+      localStorage.setString('token', json.encode(body['OUT_DATA']['token']));
+      localStorage.setString('user', json.encode(body['OUT_DATA']['name']));
+      Navigator.pushReplacement(
+        context,
+        new MaterialPageRoute(builder: (context) => Home()),
+      );
+    } else {
+      _showMsg(body['OUT_MESS']);
+    }
+
+    setState(() {
+      _isLoading = false;
+    });
   }
 }
