@@ -11,6 +11,19 @@ class Network {
     token = jsonDecode(localStorage.getString('token')!);
   }
 
+  post(data, apiURL, bearer) async {
+    var fullUrl = _url + apiURL;
+    var tok = 'Bearer ' + bearer;
+    var head = {
+      'Content-Type': 'application/json',
+      'Authorization': tok,
+      'apikey': '1234567890'
+    };
+    print(head);
+    return await http.post(Uri.parse(fullUrl),
+        body: jsonEncode(data), headers: head);
+  }
+
   auth(data, apiURL) async {
     var fullUrl = _url + apiURL;
     return await http.post(Uri.parse(fullUrl),
@@ -27,8 +40,9 @@ class Network {
   }
 
   _setHeaders() => {
-        'Content-type': 'application/json',
+        'Content-Type': 'application/json',
         'Accept': 'application/json',
         'Authorization': 'Bearer $token',
+        'apikey': '1234567890'
       };
 }

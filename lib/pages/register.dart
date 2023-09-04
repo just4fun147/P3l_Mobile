@@ -2,18 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:mobile/components/my_button.dart';
 import 'package:mobile/components/my_textfield.dart';
 import 'package:mobile/components/square_tile.dart';
+import 'package:mobile/pages/login_page.dart';
 import '../api/network.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'home.dart';
-import 'register.dart';
 
-class LoginPage extends StatefulWidget {
+class RegisterPage extends StatefulWidget {
   @override
-  _LoginState createState() => _LoginState();
+  _RegisterState createState() => _RegisterState();
 }
 
-class _LoginState extends State<LoginPage> {
+class _RegisterState extends State<RegisterPage> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   bool _secureText = true;
   bool _isLoading = false;
@@ -35,6 +35,7 @@ class _LoginState extends State<LoginPage> {
     return Scaffold(
         backgroundColor: Colors.grey[300],
         body: SingleChildScrollView(
+          physics: NeverScrollableScrollPhysics(),
           child: SafeArea(
             child: Center(
               child: Column(
@@ -52,7 +53,7 @@ class _LoginState extends State<LoginPage> {
 
                   // text
                   Text(
-                    'Welcome back you\'ve been missed!',
+                    'Input Your Data',
                     style: TextStyle(
                       color: Colors.grey[700],
                       fontSize: 16,
@@ -79,20 +80,6 @@ class _LoginState extends State<LoginPage> {
 
                   const SizedBox(height: 10),
 
-                  // forgot password?
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Text(
-                          'Forgot Password?',
-                          style: TextStyle(color: Colors.grey[600]),
-                        ),
-                      ],
-                    ),
-                  ),
-
                   const SizedBox(height: 25),
 
                   // sign in button
@@ -103,47 +90,42 @@ class _LoginState extends State<LoginPage> {
                               _login();
                             },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.indigo.shade900,
-                      ),
-                      icon: Text(""),
-                      label: _isLoading
+                          backgroundColor: Colors.indigo.shade900),
+                      icon: _isLoading
                           ? Container(
                               padding: const EdgeInsets.all(25),
-                              // margin:
-                              //     const EdgeInsets.symmetric(horizontal: 25),
-                              width: 280,
+                              margin:
+                                  const EdgeInsets.symmetric(horizontal: 25),
                               decoration: BoxDecoration(
-                                // color: Colors.indigo.shade900,
+                                color: Colors.indigo.shade900,
                                 borderRadius: BorderRadius.circular(8),
                               ),
-                              child: SizedBox(
-                                child:
-                                    Center(child: CircularProgressIndicator()),
-                                height: 21,
-                                width: 10,
+                              child: const CircularProgressIndicator(
+                                color: Colors.white,
+                                strokeWidth: 3,
                               ),
                             )
-                          : Container(
-                              padding: const EdgeInsets.all(25),
-                              margin:
-                                  const EdgeInsets.symmetric(horizontal: 50),
-                              width: 180,
-                              decoration: BoxDecoration(
-                                // color: Colors.indigo.shade900,
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: const Center(
-                                child: Text(
-                                  "Sign In",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 18,
-                                    // fontFamily: font
-                                  ),
-                                ),
-                              ),
-                            )),
+                          : Text(""),
+                      label: Container(
+                        padding: const EdgeInsets.all(25),
+                        margin: const EdgeInsets.symmetric(horizontal: 50),
+                        width: 180,
+                        decoration: BoxDecoration(
+                          color: Colors.indigo.shade900,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: const Center(
+                          child: Text(
+                            "Register",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                              // fontFamily: font
+                            ),
+                          ),
+                        ),
+                      )),
 
                   const SizedBox(height: 25),
 
@@ -152,7 +134,7 @@ class _LoginState extends State<LoginPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        'Not a member?',
+                        'Already Have Account?',
                         style: TextStyle(color: Colors.grey[700]),
                       ),
                       const SizedBox(width: 4),
@@ -161,11 +143,11 @@ class _LoginState extends State<LoginPage> {
                           Navigator.pushReplacement(
                             context,
                             new MaterialPageRoute(
-                                builder: (context) => RegisterPage()),
+                                builder: (context) => LoginPage()),
                           );
                         },
                         child: new Text(
-                          'Register now',
+                          'Sign In',
                           style: TextStyle(
                             color: Colors.blue,
                             fontWeight: FontWeight.bold,
@@ -189,9 +171,11 @@ class _LoginState extends State<LoginPage> {
       'email': usernameController.text,
       'password': passwordController.text
     };
+    print(data);
 
     var res = await Network().auth(data, 'logins');
     var body = json.decode(res.body);
+    print(body);
     if (body['OUT_STAT'] == "T") {
       SharedPreferences localStorage = await SharedPreferences.getInstance();
       localStorage.setString('token', json.encode(body['OUT_DATA']['token']));
