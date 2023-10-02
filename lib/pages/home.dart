@@ -50,10 +50,14 @@ class _HomeState extends State<Home> {
         backgroundColor: Colors.grey[300],
         appBar: AppBar(
           title: Text(
-            'Hello ${name}',
+            'Grand Atma Hotel',
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
-          backgroundColor: Colors.indigo.shade900,
+          leading: IconButton(
+            onPressed: () => {setState(() => _selectedIndex = 0)},
+            icon: Image.asset("lib/images/logo.png"),
+          ),
+          backgroundColor: Color(0xFF0C1738),
           automaticallyImplyLeading: false,
           actions: [
             IconButton(

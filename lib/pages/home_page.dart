@@ -5,6 +5,8 @@ import '../api/network.dart';
 import 'dart:convert';
 import 'login_page.dart';
 import 'home_page.dart';
+import 'package:mobile/components/home_carousel.dart';
+import 'package:mobile/components/home_card.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -40,20 +42,54 @@ class _HomeState extends State<HomePage> {
           padding: EdgeInsets.all(15),
           child: Column(
             children: [
-              Row(
-                children: [
-                  Text(
-                    'Hello, ',
-                    style: TextStyle(
-                      fontSize: 20,
+              Container(
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: Column(
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(50.0),
+                            child: Image.asset(
+                              "lib/images/logo.png",
+                              width: 75.0,
+                            ),
+                          )
+                        ],
+                      ),
                     ),
-                  ),
-                  Text(
-                    '${name}',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
-                ],
-              )
+                    Expanded(
+                      flex: 2,
+                      child: Column(children: [
+                        Row(
+                          children: [
+                            Text(
+                              'Welcome back!',
+                              style: TextStyle(fontSize: 15),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Text(
+                              '${name}',
+                              style: TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        )
+                      ]),
+                    )
+                  ],
+                ),
+              ),
+              Divider(
+                color: Colors.black,
+              ),
+              HomeCarousel(),
+              HomeCard(image: "lib/images/logo.png", title: "Testing"),
+              HomeCard(image: "lib/images/logo.png", title: "Testing"),
+              HomeCard(image: "lib/images/logo.png", title: "Testing"),
             ],
           ),
         ),
