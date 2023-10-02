@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Network {
-  final String _url = 'http://172.20.1.17:8000/api/';
+  final String _url = 'http://192.168.208.5:8000/api/';
   var token;
 
   _getToken() async {
@@ -19,7 +19,6 @@ class Network {
       'Authorization': tok,
       'apikey': '1234567890'
     };
-    print(head);
     return await http.post(Uri.parse(fullUrl),
         body: jsonEncode(data), headers: head);
   }

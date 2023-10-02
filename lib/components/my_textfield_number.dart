@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-class MyTextField extends StatelessWidget {
+class MyTextFieldNumber extends StatelessWidget {
   final controller;
   final String hintText;
   final bool obscureText;
 
-  const MyTextField({
+  const MyTextFieldNumber({
     super.key,
     required this.controller,
     required this.hintText,
@@ -17,7 +17,7 @@ class MyTextField extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 25.0),
       child: TextField(
-        keyboardType: TextInputType.text,
+        keyboardType: TextInputType.number,
         controller: controller,
         obscureText: obscureText,
         decoration: InputDecoration(
