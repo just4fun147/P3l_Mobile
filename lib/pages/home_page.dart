@@ -97,14 +97,3 @@ class _HomeState extends State<HomePage> {
     );
   }
 }
-
-//   void logout() async {
-//     var res = await Network().getData('logouts');
-//     var body = json.decode(res.body);
-//     SharedPreferences localStorage = await SharedPreferences.getInstance();
-//     localStorage.remove('user');
-//     localStorage.remove('token');
-//     Navigator.pushReplacement(
-//         context, MaterialPageRoute(builder: (context) => LoginPage()));
-//   }
-// }

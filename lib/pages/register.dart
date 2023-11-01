@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mobile/components/my_button.dart';
 import 'package:mobile/components/my_textfield.dart';
 import 'package:mobile/components/square_tile.dart';
+import 'package:mobile/components/my_textfield_number.dart';
 import 'package:mobile/pages/login_page.dart';
 import '../api/network.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -27,7 +28,11 @@ class _RegisterState extends State<RegisterPage> {
   }
 
   // text editing controllers
-  final usernameController = TextEditingController();
+  final emailController = TextEditingController();
+  final identityController = TextEditingController();
+  final nameController = TextEditingController();
+  final noController = TextEditingController();
+  final adressController = TextEditingController();
   final passwordController = TextEditingController();
 
   @override
@@ -43,14 +48,6 @@ class _RegisterState extends State<RegisterPage> {
                 children: [
                   const SizedBox(height: 50),
 
-                  // logo
-                  const Icon(
-                    Icons.lock,
-                    size: 100,
-                  ),
-
-                  const SizedBox(height: 50),
-
                   // text
                   Text(
                     'Input Your Data',
@@ -62,70 +59,155 @@ class _RegisterState extends State<RegisterPage> {
 
                   const SizedBox(height: 25),
 
-                  // username textfield
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: Container(
+                      margin: EdgeInsets.only(left: 25, bottom: 10, top: 10),
+                      child: Text("Email"),
+                    ),
+                  ),
                   MyTextField(
-                    controller: usernameController,
-                    hintText: 'Username',
+                    controller: emailController,
+                    hintText: 'Email',
+                    obscureText: false,
+                  ),
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: Container(
+                      margin: EdgeInsets.only(left: 25, bottom: 10, top: 10),
+                      child: Text("Password"),
+                    ),
+                  ),
+                  MyTextField(
+                    controller: passwordController,
+                    hintText: 'Pasword Atleast 8 Character',
+                    obscureText: true,
+                  ),
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: Container(
+                      margin: EdgeInsets.only(left: 25, bottom: 10, top: 10),
+                      child: Text("Identity"),
+                    ),
+                  ),
+                  MyTextFieldNumber(
+                    controller: identityController,
+                    hintText: '33022xxxxxx',
+                    obscureText: false,
+                  ),
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: Container(
+                      margin: EdgeInsets.only(left: 25, bottom: 10, top: 10),
+                      child: Text("Full Name"),
+                    ),
+                  ),
+                  MyTextField(
+                    controller: nameController,
+                    hintText: 'Full Name',
+                    obscureText: false,
+                  ),
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: Container(
+                      margin: EdgeInsets.only(left: 25, bottom: 10, top: 10),
+                      child: Text("Phone Number"),
+                    ),
+                  ),
+                  MyTextFieldNumber(
+                    controller: noController,
+                    hintText: 'Phone Number',
+                    obscureText: false,
+                  ),
+                  // Align(
+                  //   alignment: Alignment.topLeft,
+                  //   child: Container(
+                  //     margin: EdgeInsets.only(left: 25, bottom: 10, top: 10),
+                  //     child: Text("Tgl Lahir"),
+                  //   ),
+                  // ),
+                  // Container(
+                  //   margin:
+                  //       EdgeInsets.only(left: 25, right: 25, bottom: 10, top: 10),
+                  //   child: DateTimeFormField(
+                  //     decoration: const InputDecoration(
+                  //         hintStyle: TextStyle(color: Colors.black45),
+                  //         errorStyle: TextStyle(color: Colors.redAccent),
+                  //         border: OutlineInputBorder(),
+                  //         suffixIcon: Icon(Icons.event_note),
+                  //         labelText: 'Select your birthday',
+                  //         fillColor: Colors.white),
+                  //     mode: DateTimeFieldPickerMode.date,
+                  //     autovalidateMode: AutovalidateMode.always,
+                  //     validator: (e) =>
+                  //         (e?.day ?? 0) == 1 ? 'Please not the first day' : null,
+                  //     onDateSelected: (DateTime value) {
+                  //       print(value);
+                  //     },
+                  //   ),
+                  // ),
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: Container(
+                      margin: EdgeInsets.only(left: 25, bottom: 10, top: 10),
+                      child: Text("Address"),
+                    ),
+                  ),
+                  MyTextField(
+                    controller: adressController,
+                    hintText: 'Jalan Kaliurang 36',
                     obscureText: false,
                   ),
 
-                  const SizedBox(height: 10),
-
-                  // password textfield
-                  MyTextField(
-                    controller: passwordController,
-                    hintText: 'Password',
-                    obscureText: true,
-                  ),
-
-                  const SizedBox(height: 10),
-
                   const SizedBox(height: 25),
-
-                  // sign in button
                   ElevatedButton.icon(
                       onPressed: _isLoading
                           ? null
                           : () async {
-                              _login();
+                              _register();
                             },
                       style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.indigo.shade900),
-                      icon: _isLoading
+                        backgroundColor: Colors.indigo.shade900,
+                      ),
+                      icon: Text(""),
+                      label: _isLoading
                           ? Container(
-                              padding: const EdgeInsets.all(25),
-                              margin:
-                                  const EdgeInsets.symmetric(horizontal: 25),
+                              padding: const EdgeInsets.all(20),
+                              // margin:
+                              //     const EdgeInsets.symmetric(horizontal: 25),
+                              width: 280,
                               decoration: BoxDecoration(
-                                color: Colors.indigo.shade900,
+                                // color: Colors.indigo.shade900,
                                 borderRadius: BorderRadius.circular(8),
                               ),
-                              child: const CircularProgressIndicator(
-                                color: Colors.white,
-                                strokeWidth: 3,
+                              child: SizedBox(
+                                child:
+                                    Center(child: CircularProgressIndicator()),
+                                height: 21,
+                                width: 10,
                               ),
                             )
-                          : Text(""),
-                      label: Container(
-                        padding: const EdgeInsets.all(25),
-                        margin: const EdgeInsets.symmetric(horizontal: 50),
-                        width: 180,
-                        decoration: BoxDecoration(
-                          color: Colors.indigo.shade900,
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: const Center(
-                          child: Text(
-                            "Register",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
-                              // fontFamily: font
-                            ),
-                          ),
-                        ),
-                      )),
+                          : Container(
+                              padding: const EdgeInsets.all(20),
+                              margin:
+                                  const EdgeInsets.symmetric(horizontal: 50),
+                              width: 180,
+                              decoration: BoxDecoration(
+                                // color: Colors.indigo.shade900,
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: const Center(
+                                child: Text(
+                                  "Save",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 18,
+                                    // fontFamily: font
+                                  ),
+                                ),
+                              ),
+                            )),
 
                   const SizedBox(height: 25),
 
@@ -163,26 +245,29 @@ class _RegisterState extends State<RegisterPage> {
         ));
   }
 
-  void _login() async {
+  void _register() async {
     setState(() {
       _isLoading = true;
     });
     var data = {
-      'email': usernameController.text,
-      'password': passwordController.text
+      'email': emailController.text,
+      'password': passwordController.text,
+      'full_name': nameController.text,
+      'phone_number': noController.text,
+      'identity': identityController.text,
+      'address': adressController.text,
+      'is_group': false,
+      'role': 6,
+      'image': "",
     };
-    print(data);
-
-    var res = await Network().auth(data, 'logins');
+    var res = await Network().auth(data, 'register');
     var body = json.decode(res.body);
-    print(body);
     if (body['OUT_STAT'] == "T") {
-      SharedPreferences localStorage = await SharedPreferences.getInstance();
-      localStorage.setString('token', json.encode(body['OUT_DATA']['token']));
-      localStorage.setString('user', json.encode(body['OUT_DATA']['name']));
+      _showMsg(body['OUT_MESS']);
+      await Future.delayed(Duration(seconds: 3));
       Navigator.pushReplacement(
         context,
-        new MaterialPageRoute(builder: (context) => Home()),
+        new MaterialPageRoute(builder: (context) => LoginPage()),
       );
     } else {
       _showMsg(body['OUT_MESS']);

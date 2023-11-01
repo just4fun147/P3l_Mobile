@@ -8,5 +8,6 @@ class ResLogin {
 class OutData {
   final String token;
   final String name;
-  OutData({required this.token, required this.name});
+  final String role;
+  OutData({required this.token, required this.name, required this.role});
 }

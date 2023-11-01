@@ -7,6 +7,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'home.dart';
 import 'register.dart';
+import 'Owner/home_owner.dart';
+import 'GM/home_gm.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -64,7 +66,7 @@ class _LoginState extends State<LoginPage> {
                   // username textfield
                   MyTextField(
                     controller: usernameController,
-                    hintText: 'Username',
+                    hintText: 'Email',
                     obscureText: false,
                   ),
 
@@ -192,14 +194,35 @@ class _LoginState extends State<LoginPage> {
 
     var res = await Network().auth(data, 'logins');
     var body = json.decode(res.body);
+    var role = '';
     if (body['OUT_STAT'] == "T") {
+      var lenght = json.encode(body['OUT_DATA']['role']).length;
+      role = json.encode(body['OUT_DATA']['role']).substring(1, lenght - 1);
       SharedPreferences localStorage = await SharedPreferences.getInstance();
       localStorage.setString('token', json.encode(body['OUT_DATA']['token']));
       localStorage.setString('user', json.encode(body['OUT_DATA']['name']));
-      Navigator.pushReplacement(
-        context,
-        new MaterialPageRoute(builder: (context) => Home()),
-      );
+      localStorage.setString('role', json.encode(body['OUT_DATA']['role']));
+      var cust = "865fd661-ca01-44f6-866d-b44773740791";
+      var owner = "4c8ad9bf-3168-4c16-ad64-dc0cfab73dc7";
+      var gm = "5616fc68-f5a3-4ce2-bfc5-a6d4f3cc6526";
+      if (role == cust) {
+        Navigator.pushReplacement(
+          context,
+          new MaterialPageRoute(builder: (context) => Home()),
+        );
+      } else if (role == owner) {
+        Navigator.pushReplacement(
+          context,
+          new MaterialPageRoute(builder: (context) => HomeOwner()),
+        );
+      } else if (role == gm) {
+        Navigator.pushReplacement(
+          context,
+          new MaterialPageRoute(builder: (context) => HomeGM()),
+        );
+      } else {
+        _showMsg(body['OUT_MESS']);
+      }
     } else {
       _showMsg(body['OUT_MESS']);
     }
