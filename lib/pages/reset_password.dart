@@ -2,21 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:mobile/components/my_button.dart';
 import 'package:mobile/components/my_textfield.dart';
 import 'package:mobile/components/square_tile.dart';
+import 'package:mobile/components/my_textfield_number.dart';
+import 'package:mobile/pages/login_page.dart';
 import '../api/network.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'home.dart';
-import 'register.dart';
-import 'reset_password.dart';
-import 'Owner/home_owner.dart';
-import 'GM/home_gm.dart';
 
-class LoginPage extends StatefulWidget {
+class ResetPassPage extends StatefulWidget {
   @override
-  _LoginState createState() => _LoginState();
+  _RegisterState createState() => _RegisterState();
 }
 
-class _LoginState extends State<LoginPage> {
+class _RegisterState extends State<ResetPassPage> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   bool _secureText = true;
   bool _isLoading = false;
@@ -30,14 +28,16 @@ class _LoginState extends State<LoginPage> {
   }
 
   // text editing controllers
-  final usernameController = TextEditingController();
-  final passwordController = TextEditingController();
+  final emailController = TextEditingController();
+  final phoneController = TextEditingController();
+  final nameController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Colors.grey[300],
         body: SingleChildScrollView(
+          physics: NeverScrollableScrollPhysics(),
           child: SafeArea(
             child: Center(
               child: Column(
@@ -45,17 +45,9 @@ class _LoginState extends State<LoginPage> {
                 children: [
                   const SizedBox(height: 50),
 
-                  // logo
-                  const Icon(
-                    Icons.lock,
-                    size: 100,
-                  ),
-
-                  const SizedBox(height: 50),
-
                   // text
                   Text(
-                    'Welcome back you\'ve been missed!',
+                    'Authenticated Yourself',
                     style: TextStyle(
                       color: Colors.grey[700],
                       fontSize: 16,
@@ -64,55 +56,49 @@ class _LoginState extends State<LoginPage> {
 
                   const SizedBox(height: 25),
 
-                  // username textfield
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: Container(
+                      margin: EdgeInsets.only(left: 25, bottom: 10, top: 10),
+                      child: Text("Email"),
+                    ),
+                  ),
                   MyTextField(
-                    controller: usernameController,
-                    hintText: 'Email',
+                    controller: emailController,
+                    hintText: 'a@gmail.com',
+                    obscureText: false,
+                  ),
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: Container(
+                      margin: EdgeInsets.only(left: 25, bottom: 10, top: 10),
+                      child: Text("Full Name"),
+                    ),
+                  ),
+                  MyTextField(
+                    controller: nameController,
+                    hintText: 'Your Name',
+                    obscureText: false,
+                  ),
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: Container(
+                      margin: EdgeInsets.only(left: 25, bottom: 10, top: 10),
+                      child: Text("Phone Number"),
+                    ),
+                  ),
+                  MyTextField(
+                    controller: phoneController,
+                    hintText: '081xxx',
                     obscureText: false,
                   ),
 
-                  const SizedBox(height: 10),
-
-                  // password textfield
-                  MyTextField(
-                    controller: passwordController,
-                    hintText: 'Password',
-                    obscureText: true,
-                  ),
-
-                  const SizedBox(height: 10),
-
-                  // forgot password?
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.pushReplacement(
-                              context,
-                              new MaterialPageRoute(
-                                  builder: (context) => ResetPassPage()),
-                            );
-                          },
-                          child: Text(
-                            'Forgot Password?',
-                            style: TextStyle(color: Colors.grey[600]),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-
                   const SizedBox(height: 25),
-
-                  // sign in button
                   ElevatedButton.icon(
                       onPressed: _isLoading
                           ? null
-                          : () async {
-                              _login();
+                          : () {
+                              showAlertDialog(context);
                             },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.indigo.shade900,
@@ -120,7 +106,7 @@ class _LoginState extends State<LoginPage> {
                       icon: Text(""),
                       label: _isLoading
                           ? Container(
-                              padding: const EdgeInsets.all(25),
+                              padding: const EdgeInsets.all(20),
                               // margin:
                               //     const EdgeInsets.symmetric(horizontal: 25),
                               width: 280,
@@ -136,7 +122,7 @@ class _LoginState extends State<LoginPage> {
                               ),
                             )
                           : Container(
-                              padding: const EdgeInsets.all(25),
+                              padding: const EdgeInsets.all(20),
                               margin:
                                   const EdgeInsets.symmetric(horizontal: 50),
                               width: 180,
@@ -146,7 +132,7 @@ class _LoginState extends State<LoginPage> {
                               ),
                               child: const Center(
                                 child: Text(
-                                  "Sign In",
+                                  "Save",
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
@@ -158,13 +144,12 @@ class _LoginState extends State<LoginPage> {
                             )),
 
                   const SizedBox(height: 25),
-
                   // register
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        'Not a member?',
+                        'Already Have Account?',
                         style: TextStyle(color: Colors.grey[700]),
                       ),
                       const SizedBox(width: 4),
@@ -173,11 +158,11 @@ class _LoginState extends State<LoginPage> {
                           Navigator.pushReplacement(
                             context,
                             new MaterialPageRoute(
-                                builder: (context) => RegisterPage()),
+                                builder: (context) => LoginPage()),
                           );
                         },
                         child: new Text(
-                          'Register now',
+                          'Sign In',
                           style: TextStyle(
                             color: Colors.blue,
                             fontWeight: FontWeight.bold,
@@ -193,46 +178,57 @@ class _LoginState extends State<LoginPage> {
         ));
   }
 
-  void _login() async {
+  showAlertDialog(BuildContext context) {
+    // set up the buttons
+    Widget cancelButton = TextButton(
+      child: Text("Cancel"),
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+    );
+    Widget continueButton = TextButton(
+      child: Text("Confirm"),
+      onPressed: () async {
+        _register();
+        Navigator.of(context).pop();
+      },
+    );
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Confirmation"),
+      content: Text("Are You Sure Want To Reset Password?"),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
+    );
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
+  void _register() async {
     setState(() {
       _isLoading = true;
     });
     var data = {
-      'email': usernameController.text,
-      'password': passwordController.text
+      'email': emailController.text,
+      'full_name': nameController.text,
+      'phone_number': phoneController.text,
     };
-
-    var res = await Network().auth(data, 'logins');
+    var res = await Network().auth(data, 'users/reset');
     var body = json.decode(res.body);
-    var role = '';
     if (body['OUT_STAT'] == "T") {
-      var lenght = json.encode(body['OUT_DATA']['role']).length;
-      role = json.encode(body['OUT_DATA']['role']).substring(1, lenght - 1);
-      SharedPreferences localStorage = await SharedPreferences.getInstance();
-      localStorage.setString('token', json.encode(body['OUT_DATA']['token']));
-      localStorage.setString('user', json.encode(body['OUT_DATA']['name']));
-      localStorage.setString('role', json.encode(body['OUT_DATA']['role']));
-      var cust = "865fd661-ca01-44f6-866d-b44773740791";
-      var owner = "4c8ad9bf-3168-4c16-ad64-dc0cfab73dc7";
-      var gm = "5616fc68-f5a3-4ce2-bfc5-a6d4f3cc6526";
-      if (role == cust) {
-        Navigator.pushReplacement(
-          context,
-          new MaterialPageRoute(builder: (context) => Home()),
-        );
-      } else if (role == owner) {
-        Navigator.pushReplacement(
-          context,
-          new MaterialPageRoute(builder: (context) => HomeOwner()),
-        );
-      } else if (role == gm) {
-        Navigator.pushReplacement(
-          context,
-          new MaterialPageRoute(builder: (context) => HomeGM()),
-        );
-      } else {
-        _showMsg(body['OUT_MESS']);
-      }
+      _showMsg(body['OUT_MESS']);
+      await Future.delayed(Duration(seconds: 3));
+      Navigator.pushReplacement(
+        context,
+        new MaterialPageRoute(builder: (context) => LoginPage()),
+      );
     } else {
       _showMsg(body['OUT_MESS']);
     }

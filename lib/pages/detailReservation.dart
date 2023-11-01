@@ -36,6 +36,7 @@ class _HomeState extends State<DetailReservation> {
 
   @override
   void initState() {
+    _isLoading = true;
     super.initState();
     _loadReservation();
   }
@@ -117,35 +118,37 @@ class _HomeState extends State<DetailReservation> {
                       style:
                           TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
               const SizedBox(height: 25),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                child: Row(
-                  children: [
-                    Expanded(
-                      flex: 1,
-                      child: Container(
-                        width: MediaQuery.of(context).size.width * 0.5,
-                        child: Align(
-                          alignment: Alignment.topLeft,
-                          // child: Text("("+total+") " + type+" " ),
-                          child: Text(start_date),
-                        ),
+              _isLoading
+                  ? Container()
+                  : Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            flex: 1,
+                            child: Container(
+                              width: MediaQuery.of(context).size.width * 0.5,
+                              child: Align(
+                                alignment: Alignment.topLeft,
+                                // child: Text("("+total+") " + type+" " ),
+                                child: Text(start_date),
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            flex: 1,
+                            child: Container(
+                              width: MediaQuery.of(context).size.width * 0.5,
+                              child: Align(
+                                alignment: Alignment.topRight,
+                                // child: Text("("+total+") " + type+" " ),
+                                child: Text(end_date),
+                              ),
+                            ),
+                          )
+                        ],
                       ),
                     ),
-                    Expanded(
-                      flex: 1,
-                      child: Container(
-                        width: MediaQuery.of(context).size.width * 0.5,
-                        child: Align(
-                          alignment: Alignment.topRight,
-                          // child: Text("("+total+") " + type+" " ),
-                          child: Text(end_date),
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-              ),
               const SizedBox(height: 50),
               Container(
                 child: ListView.builder(
@@ -168,6 +171,13 @@ class _HomeState extends State<DetailReservation> {
                         price: addon[index]['price'].toString(),
                         total: addon[index]['total'].toString());
                   }),
+              const SizedBox(height: 25),
+              _isLoading
+                  ? Container()
+                  : Divider(
+                      color: Colors.black,
+                    ),
+              const SizedBox(height: 25),
               !_isLoading ? Summary(price: total.toString()) : Container()
             ],
           ),

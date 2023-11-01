@@ -94,8 +94,8 @@ class _HomeState extends State<ChangePasswordPage> {
             ElevatedButton.icon(
                 onPressed: _isLoading
                     ? null
-                    : () async {
-                        _update();
+                    : () {
+                        showAlertDialog(context);
                       },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.indigo.shade900,
@@ -140,6 +140,39 @@ class _HomeState extends State<ChangePasswordPage> {
           ],
         ),
       ),
+    );
+  }
+
+  showAlertDialog(BuildContext context) {
+    // set up the buttons
+    Widget cancelButton = TextButton(
+      child: Text("Cancel"),
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+    );
+    Widget continueButton = TextButton(
+      child: Text("Confirm"),
+      onPressed: () async {
+        _update();
+        Navigator.of(context).pop();
+      },
+    );
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Confirmation"),
+      content: Text("Are You Sure Want To Change Password?"),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
+    );
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
     );
   }
 

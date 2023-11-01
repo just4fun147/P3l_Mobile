@@ -87,9 +87,12 @@ class _HomeState extends State<HomePage> {
                 color: Colors.black,
               ),
               HomeCarousel(),
-              HomeCard(image: "lib/images/logo.png", title: "Testing"),
-              HomeCard(image: "lib/images/logo.png", title: "Testing"),
-              HomeCard(image: "lib/images/logo.png", title: "Testing"),
+              HomeCard(
+                  image: "lib/images/superior.jpg",
+                  title: "Personal Reservation"),
+              HomeCard(
+                  image: "lib/images/double.jpg", title: "Group Reservation"),
+              HomeCard(image: "lib/images/ballroom.jpg", title: "Meeting Room"),
             ],
           ),
         ),

@@ -6,6 +6,7 @@ import '../api/network.dart';
 import 'dart:convert';
 import 'login_page.dart';
 import 'home_page.dart';
+import 'home_guest.dart';
 import 'page2.dart';
 import 'page3.dart';
 import 'search.dart';
