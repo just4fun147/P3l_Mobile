@@ -6,6 +6,8 @@ import 'dart:convert';
 import '../login_page.dart';
 import '../home_page.dart';
 import '../profile_page.dart';
+import '../monthly_report.dart';
+import '../loyal_cust_report.dart';
 
 class HomeGM extends StatefulWidget {
   @override
@@ -18,6 +20,8 @@ class _HomeState extends State<HomeGM> {
 
   static List<Widget> _widgetOptions = <Widget>[
     HomePage(),
+    LoyalPage(),
+    MonthylyPage(),
     ProfilePage(),
   ];
 
@@ -100,6 +104,16 @@ class _HomeState extends State<HomeGM> {
               icon: Icon(Icons.home_outlined),
               activeIcon: Icon(Icons.home),
               label: 'Home',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.group_outlined),
+              activeIcon: Icon(Icons.group),
+              label: 'Loyal Customer',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.calendar_month_outlined),
+              activeIcon: Icon(Icons.calendar_month),
+              label: 'Monthly Report',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.person_outline),

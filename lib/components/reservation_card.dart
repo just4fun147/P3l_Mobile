@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/pages/home.dart';
+import 'package:mobile/pages/page3.dart';
 import '../pages/detailReservation.dart';
+import '../api/network.dart';
+import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ReservationCard extends StatelessWidget {
   final String id;
@@ -19,6 +24,13 @@ class ReservationCard extends StatelessWidget {
     required this.id_booking,
     required this.status,
   });
+
+  _showMsg(msg, context) {
+    final snackBar = SnackBar(
+      content: Text(msg),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,21 +69,108 @@ class ReservationCard extends StatelessWidget {
                   child: Row(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Text(status == "0"
-                      ? "Expired"
-                      : status == "1" || status == "2"
-                          ? "Not Paid"
-                          : status == "3" || status == "4"
-                              ? "Paid"
-                              : status == "5"
-                                  ? "Success"
-                                  : "Cancel"),
+                  Row(
+                    children: [
+                      Column(
+                        children: [
+                          Text(status == "0"
+                              ? "Expired"
+                              : status == "1" || status == "2"
+                                  ? "Not Paid"
+                                  : status == "3" || status == "4"
+                                      ? "Paid"
+                                      : status == "5"
+                                          ? "Success"
+                                          : "Cancel"),
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          (status == "1" ||
+                                  status == "2" ||
+                                  status == "3" ||
+                                  status == "4"
+                              ? TextButton(
+                                  style: ButtonStyle(
+                                      backgroundColor:
+                                          MaterialStateProperty.all(
+                                              Colors.green)),
+                                  onPressed: () async {
+                                    showAlertDialog(context);
+                                  },
+                                  child: Text(
+                                    status == "4" || status == "2"
+                                        ? "Cancel"
+                                        : "Refund",
+                                    style: TextStyle(color: Colors.black),
+                                  ))
+                              : Text(""))
+                        ],
+                      )
+                    ],
+                  )
                 ],
               ))
             ]),
           );
         })),
       ),
+    );
+  }
+
+  void _cancel(context) async {
+    var data = {
+      'id': id,
+    };
+
+    SharedPreferences localStorage = await SharedPreferences.getInstance();
+    var tokens = localStorage.getString('token');
+    var lenght = tokens!.length;
+    var token = tokens.substring(1, lenght - 1);
+    var res = await Network().post(data, 'reservation/cancel', token);
+    var body = json.decode(res.body);
+    if (body['OUT_STAT'] == "T") {
+      _showMsg(body['OUT_MESS'], context);
+
+      Navigator.push(
+        context,
+        new MaterialPageRoute(builder: (context) => Home()),
+      );
+    } else {
+      _showMsg(body['OUT_MESS'], context);
+    }
+  }
+
+  showAlertDialog(BuildContext context) {
+    // set up the buttons
+    Widget cancelButton = TextButton(
+      child: Text("Cancel"),
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+    );
+    Widget continueButton = TextButton(
+      child: Text("Confirm"),
+      onPressed: () async {
+        _cancel(context);
+        Navigator.of(context).pop();
+      },
+    );
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Confirmation"),
+      content: Text("Are You Sure Want To Cancel This Reservation?"),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
+    );
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
     );
   }
 }

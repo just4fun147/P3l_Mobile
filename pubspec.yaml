@@ -17,6 +17,7 @@ dependencies:
   shared_preferences: ^2.2.1
   date_field: ^3.0.5
   carousel_slider: ^4.2.1
+  url_launcher: ^6.1.11
 dev_dependencies:
   flutter_test:
     sdk: flutter

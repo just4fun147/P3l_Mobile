@@ -9,6 +9,7 @@ import 'package:mobile/components/home_carousel.dart';
 import 'package:mobile/components/home_card.dart';
 import '../components/detail.dart';
 import '../components/summary.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class DetailReservation extends StatefulWidget {
   const DetailReservation({super.key, required this.id});
@@ -26,12 +27,20 @@ class _HomeState extends State<DetailReservation> {
   var start_date;
   var end_date;
   var invoice;
+  // var _url = "http://10.53.2.215:3000/";
   bool _isLoading = true;
   _showMsg(msg) {
     final snackBar = SnackBar(
       content: Text(msg),
     );
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
+  Future<void> _launchUrl() async {
+    var _url = Uri.tryParse('http://10.53.2.215:3000/my-bill/p/${widget.id}');
+    if (!await launchUrl(_url!)) {
+      throw Exception('Could not launch $_url');
+    }
   }
 
   @override
@@ -62,7 +71,7 @@ class _HomeState extends State<DetailReservation> {
       var summarys = body['OUT_DATA'][0]['summary'].toList();
       var addons = body['OUT_DATA'][0]['addon'].toList();
       var totals = json.encode(body['OUT_DATA'][0]['total_price']);
-      var invoices = json.encode(body['OUT_DATA'][0]['invoice_number']);
+      var invoices = json.encode(body['OUT_DATA'][0]['id_booking']);
       var startDate = json.encode(body['OUT_DATA'][0]['end_date']);
       var endDate = json.encode(body['OUT_DATA'][0]['start_date']);
       var lenght = totals.length;
@@ -178,7 +187,26 @@ class _HomeState extends State<DetailReservation> {
                       color: Colors.black,
                     ),
               const SizedBox(height: 25),
-              !_isLoading ? Summary(price: total.toString()) : Container()
+              !_isLoading ? Summary(price: total.toString()) : Container(),
+              const SizedBox(height: 25),
+              Row(
+                children: [
+                  Center(
+                    child: ElevatedButton.icon(
+                      onPressed: () {
+                        _launchUrl();
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.indigo.shade900,
+                      ),
+                      icon: Text("Bill"),
+                      label: const Center(
+                        child: Text(""),
+                      ),
+                    ),
+                  ),
+                ],
+              )
             ],
           ),
         ),

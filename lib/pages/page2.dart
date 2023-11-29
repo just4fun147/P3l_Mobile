@@ -5,7 +5,10 @@ import '../api/network.dart';
 import 'dart:convert';
 import 'login_page.dart';
 import 'home_page.dart';
+import 'search.dart';
 import 'package:mobile/components/my_textfield_number2.dart';
+import '../api/network.dart';
+import 'dart:convert';
 
 const List<int> list = <int>[1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
@@ -19,10 +22,30 @@ class _HomeState extends State<Page2> {
   String end_date = '';
   final adultController = TextEditingController();
   final childController = TextEditingController();
+  bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
+  }
+
+  _showMsg(msg) {
+    final snackBar = SnackBar(
+      content: Text(msg),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
+  _loadReservation() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => Page4(
+              start_date: start_date,
+              end_date: end_date,
+              adult: adultController.text,
+              child: childController.text)),
+    );
   }
 
   @override
@@ -110,7 +133,17 @@ class _HomeState extends State<Page2> {
                   Expanded(
                     child: ElevatedButton.icon(
                         label: Text(""),
-                        onPressed: () => {},
+                        onPressed: () => {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Page4(
+                                        start_date: start_date,
+                                        end_date: end_date,
+                                        adult: adultController.text,
+                                        child: childController.text)),
+                              )
+                            },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.indigo.shade900,
                         ),

@@ -4,6 +4,9 @@
         android:label="mobile"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+        <activity android:name="io.flutter.plugins.urllauncher.WebViewActivity"
+           android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+           android:exported="false"/>
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -31,4 +34,5 @@
             android:name="flutterEmbedding"
             android:value="2" />
     </application>
+    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
 </manifest>

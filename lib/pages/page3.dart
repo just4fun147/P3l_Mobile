@@ -6,6 +6,8 @@ import 'dart:convert';
 import 'login_page.dart';
 import 'home_page.dart';
 import '../components/reservation_card.dart';
+import 'package:mobile/components/my_textfield.dart';
+import 'dart:async';
 
 class Page3 extends StatefulWidget {
   @override
@@ -13,6 +15,9 @@ class Page3 extends StatefulWidget {
 }
 
 class _HomeState extends State<Page3> {
+  var searchData = "";
+  Timer? _timer;
+
   _showMsg(msg) {
     final snackBar = SnackBar(
       content: Text(msg),
@@ -37,21 +42,21 @@ class _HomeState extends State<Page3> {
     _isLoading = true;
     var dataUnpaid = {
       "id": null,
-      "search": null,
+      "search": searchData,
       "is_group": false,
       "is_open": true,
       "is_paid": false
     };
     var dataPaid = {
       "id": null,
-      "search": null,
+      "search": searchData,
       "is_group": false,
       "is_open": true,
       "is_paid": true
     };
     var dataFinished = {
       "id": null,
-      "search": null,
+      "search": searchData,
       "is_group": false,
       "is_open": false,
       "is_paid": false
@@ -89,6 +94,17 @@ class _HomeState extends State<Page3> {
       child: Container(
         padding: EdgeInsets.all(15),
         child: Column(children: <Widget>[
+          TextField(
+            onChanged: (String value) {
+              if (_timer?.isActive ?? false) _timer!.cancel();
+              _timer = Timer(const Duration(milliseconds: 500), () {
+                searchData = value;
+                _isLoading = true;
+                _loadReservation();
+              });
+            },
+            // ...
+          ),
           const SizedBox(height: 25),
           _isLoading
               ? Center(

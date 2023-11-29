@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Detail extends StatelessWidget {
   final String type;
@@ -16,30 +17,34 @@ class Detail extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 25.0),
-        child: Row(
+        child: Column(
           children: [
-            Expanded(
-              flex: 1,
-              child: Container(
-                width: MediaQuery.of(context).size.width * 0.5,
-                child: Align(
-                  alignment: Alignment.topLeft,
-                  // child: Text("("+total+") " + type+" " ),
-                  child: Text("(" + total + ")" + type),
+            Row(
+              children: [
+                Expanded(
+                  flex: 1,
+                  child: Container(
+                    width: MediaQuery.of(context).size.width * 0.5,
+                    child: Align(
+                      alignment: Alignment.topLeft,
+                      // child: Text("("+total+") " + type+" " ),
+                      child: Text("( " + total + " )" + type),
+                    ),
+                  ),
                 ),
-              ),
+                Expanded(
+                  flex: 1,
+                  child: Container(
+                    width: MediaQuery.of(context).size.width * 0.5,
+                    child: Align(
+                      alignment: Alignment.topRight,
+                      // child: Text("("+total+") " + type+" " ),
+                      child: Text(price),
+                    ),
+                  ),
+                ),
+              ],
             ),
-            Expanded(
-              flex: 1,
-              child: Container(
-                width: MediaQuery.of(context).size.width * 0.5,
-                child: Align(
-                  alignment: Alignment.topRight,
-                  // child: Text("("+total+") " + type+" " ),
-                  child: Text(price),
-                ),
-              ),
-            )
           ],
         ));
   }
